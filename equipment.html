@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>器材表 · 27+ Home Studio · 陳棉</title>
+<meta name="description" content="Studio equipment inventory — mics, preamps, monitors, samplers, synthesizers.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+
+:root {
+  --black:#09090b; --off-black:#141416; --charcoal:#27272a; --graphite:#3f3f46;
+  --grey:#71717a; --grey-light:#a1a1aa; --silver:#d4d4d8; --snow:#f4f4f5; --white:#fafafa;
+  --purple-light:#CBB9D6; --purple-deep:#6667AB;
+  --signal:var(--purple-deep); --signal-dim:#565799;
+  --signal-bg:rgba(102,103,171,0.08); --signal-glow:rgba(102,103,171,0.2);
+  --spectrum-1:#d4799c; --spectrum-2:#e8a87c; --spectrum-3:#d4c97a;
+  --spectrum-4:#85c9a3; --spectrum-5:#7aaed4; --spectrum-6:#b8a9d4;
+  --bg-light:var(--snow); --bg-card:var(--white);
+  --border-light:rgba(0,0,0,0.07); --border-dark:rgba(255,255,255,0.1);
+  --font-display:'Syne','Space Grotesk','Noto Sans TC',system-ui,sans-serif;
+  --font-body:'Space Grotesk','Noto Sans TC',system-ui,sans-serif;
+  --font-mono:'Space Mono','Courier New',monospace;
+  --text-hero:clamp(3rem,7vw,5.5rem);
+  --text-h2:clamp(1.5rem,3vw,2rem);
+  --text-h3:clamp(1rem,2vw,1.3rem);
+  --text-body:1rem; --text-sm:0.875rem; --text-xs:0.75rem;
+  --ease:cubic-bezier(0.4,0,0.2,1); --dur:0.3s;
+  --radius:4px; --radius-lg:6px;
+  --max-w:1100px; --max-w-text:660px;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg-light);color:var(--charcoal);line-height:1.7;-webkit-font-smoothing:antialiased;font-size:var(--text-body)}
+::selection{background:var(--signal);color:var(--white)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:var(--radius)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
+
+.skip-link{position:absolute;left:-9999px;top:1rem;z-index:100;background:var(--black);color:var(--white);padding:0.5rem 1rem;font-family:var(--font-mono);font-size:var(--text-xs);text-decoration:none;letter-spacing:0.08em;text-transform:uppercase}
+.skip-link:focus{left:1rem}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(244,244,245,0.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border-light)}
+.nav-brand{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal);text-decoration:none;white-space:nowrap}
+.nav-brand strong{color:var(--signal);font-weight:700}
+.nav-links{display:flex;gap:2rem}
+.nav-links a{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--grey);text-decoration:none;text-transform:uppercase;letter-spacing:0.08em;transition:color var(--dur) var(--ease)}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--black)}
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:0.5rem;-webkit-tap-highlight-color:transparent}
+.nav-toggle span{display:block;width:22px;height:2px;background:var(--charcoal);margin:5px 0;transition:all 0.3s var(--ease)}
+.nav-toggle.open span:nth-child(1){transform:rotate(45deg) translate(4px,5px)}
+.nav-toggle.open span:nth-child(2){opacity:0}
+.nav-toggle.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-5px)}
+
+.hero{background:var(--black);color:var(--white);min-height:52vh;padding:7rem 2rem 3.5rem;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--spectrum-1),var(--spectrum-2),var(--spectrum-3),var(--spectrum-4),var(--spectrum-5),var(--spectrum-6))}
+.hero-inner{max-width:var(--max-w);margin:0 auto;width:100%}
+.hero-title{font-family:var(--font-display);font-size:var(--text-hero);font-weight:800;line-height:0.92;letter-spacing:-0.01em;text-transform:uppercase;margin-bottom:1.25rem}
+.hero-title em{font-style:normal;color:var(--purple-light)}
+.hero-title .dot{color:var(--purple-deep)}
+.hero-cjk{font-family:var(--font-display);font-size:clamp(1.25rem,3vw,2rem);font-weight:700;color:var(--grey-light);letter-spacing:0.3em}
+
+.wrap{max-width:var(--max-w);margin:0 auto;padding:4.5rem 2rem 5rem}
+.section{margin-bottom:5rem}
+.section:last-child{margin-bottom:0}
+.section-head{display:flex;align-items:baseline;gap:1.5rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border-light)}
+.section-num{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.16em;color:var(--grey)}
+.section-title{font-family:var(--font-display);font-size:var(--text-h2);font-weight:700;color:var(--black);text-transform:uppercase;letter-spacing:0.02em;flex:1}
+.section-cjk{font-family:var(--font-display);font-size:var(--text-h3);font-weight:500;color:var(--grey);letter-spacing:0.15em}
+
+.gear-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.gear-card{background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:1.25rem 1.25rem 1.25rem 1.5rem;position:relative;transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease),border-color var(--dur) var(--ease);overflow:hidden}
+.gear-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--signal);opacity:0.6;transition:opacity var(--dur) var(--ease),width var(--dur) var(--ease)}
+.gear-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,0.06);border-color:var(--silver)}
+.gear-card:hover::before{opacity:1;width:4px}
+.gear-card.on-loan{opacity:0.6}
+.gear-card.on-loan::before{background:var(--grey-light)}
+.gear-index{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--grey-light);letter-spacing:0.1em;margin-bottom:0.4rem}
+.gear-name{font-family:var(--font-display);font-size:1.05rem;font-weight:600;color:var(--black);letter-spacing:0.01em;line-height:1.3;text-transform:uppercase;margin-bottom:0.35rem}
+.gear-card.on-loan .gear-name{text-decoration:line-through;text-decoration-color:var(--grey-light)}
+.gear-meta{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--grey);letter-spacing:0.05em;text-transform:uppercase}
+.loan-badge{display:inline-block;margin-top:0.5rem;padding:0.15rem 0.55rem;font-family:var(--font-mono);font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;background:var(--signal-bg);color:var(--signal-dim);border-radius:50px}
+
+.section[data-accent="1"] .section-num{color:var(--spectrum-1)}
+.section[data-accent="2"] .section-num{color:var(--spectrum-2)}
+.section[data-accent="3"] .section-num{color:var(--spectrum-3)}
+.section[data-accent="4"] .section-num{color:var(--spectrum-4)}
+.section[data-accent="5"] .section-num{color:var(--spectrum-5)}
+.section[data-accent="6"] .section-num{color:var(--spectrum-6)}
+.section[data-accent="7"] .section-num{color:var(--purple-deep)}
+.section[data-accent="8"] .section-num{color:var(--purple-light)}
+
+@media (max-width:768px){
+  .nav{padding:1rem 1.25rem}
+  .nav-toggle{display:block}
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0.6rem;padding:1rem 1.25rem 1.5rem;background:rgba(244,244,245,0.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border-light)}
+  .nav-links.show{display:flex}
+  .nav-links a{font-size:0.85rem}
+  .hero{padding:6rem 1.5rem 2.5rem;min-height:45vh}
+  .wrap{padding:3rem 1.25rem 3.5rem}
+  .section{margin-bottom:3.5rem}
+  .section-head{flex-wrap:wrap;gap:0.6rem}
+  .section-cjk{width:100%;font-size:var(--text-sm)}
+  .gear-grid{grid-template-columns:1fr;gap:0.75rem}
+}
+@media (max-width:480px){
+  .nav-links{gap:0.8rem}
+  .nav-brand{font-size:0.65rem;letter-spacing:0.15em}
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- ════════════════════════════════════════════════════════════════
+     GEAR DATA — edit this to add/remove items.
+     Each section: { id, nav, title, cjk, accent (1–8), items [] }
+     Each item:    { name, meta, onLoan? }
+     The render loop below handles counts (01 / N), nav links,
+     section numbering, and on-loan styling automatically.
+═════════════════════════════════════════════════════════════════ -->
+<script>
+const SECTIONS = [
+  {
+    id: 'mics', nav: 'Mics', title: 'Microphones', cjk: '麥 克 風', accent: 1,
+    items: [
+      { name: 'Neumann U87 ai',      meta: 'Large-Diaphragm Condenser' },
+      { name: 'Vanguard V13 Gen2',   meta: 'Tube Condenser' },
+      { name: 'Sennheiser E945',     meta: 'Supercardioid Dynamic' },
+      { name: 'Sennheiser E935',     meta: 'Cardioid Dynamic' },
+      { name: 'Soyuz V1',            meta: 'Dynamic Microphone' },
+      { name: 'Shure SM57',          meta: 'Cardioid Dynamic' },
+      { name: 'DPA 2017',            meta: 'Shotgun Microphone' },
+    ]
+  },
+  {
+    id: 'mic-pre', nav: 'Mic Pre', title: 'Mic Pre', cjk: '前 級', accent: 2,
+    items: [
+      { name: 'Soyuz Lakeside',      meta: 'Single Channel · Class-A Preamp' },
+      { name: 'Soyuz The Launcher',  meta: 'Inline Active Preamp' },
+    ]
+  },
+  {
+    id: 'interface', nav: 'Interface', title: 'Recording / Interface', cjk: '錄 音 介 面', accent: 3,
+    items: [
+      { name: 'Neumann MT48',           meta: 'Audio Interface' },
+      { name: 'UA Volt 1',              meta: 'USB Audio Interface' },
+      { name: 'UA Apollo Twin X Duo',   meta: 'Thunderbolt Interface', onLoan: true },
+    ]
+  },
+  {
+    id: 'monitoring', nav: 'Monitoring', title: 'Monitoring', cjk: '監 聽', accent: 4,
+    items: [
+      { name: 'Barefoot Footprint 03',                meta: 'Studio Monitor' },
+      { name: 'Genelec 8320',                         meta: 'SAM Monitor' },
+      { name: 'IK Multimedia iLoud Micro Monitor Pro',meta: 'Compact Monitor · Pair' },
+      { name: 'Tannoy Gold 5',                        meta: 'Dual Concentric Monitor' },
+      { name: 'Beyerdynamic DT 770 Pro X',            meta: 'Closed-Back Headphones' },
+      { name: 'Sony IER-M7',                          meta: 'In-Ear Monitors' },
+      { name: 'Sony MDR-MV1',                         meta: 'Open-Back Headphones' },
+      { name: 'Sony 7606',                            meta: 'Headphones', onLoan: true },
+    ]
+  },
+  {
+    id: 'fx', nav: 'FX', title: 'Sampler / Effect / Pedal', cjk: '取 樣 · 效 果', accent: 5,
+    items: [
+      { name: 'Roland SP-404 MK2',        meta: 'Sampler' },
+      { name: 'Hologram Chroma Console',  meta: 'Multi-FX Pedal' },
+      { name: 'Korg Kaoss Pad KP3+',      meta: 'Dynamic Effect / Sampler' },
+    ]
+  },
+  {
+    id: 'visual', nav: 'Visual', title: 'Video Synth', cjk: '影 像 合 成 器', accent: 6,
+    items: [
+      { name: 'Critter & Guitari EYESY', meta: 'Video Synthesizer' },
+    ]
+  },
+  {
+    id: 'midi', nav: 'MIDI', title: 'MIDI', cjk: '控 制 器', accent: 7,
+    items: [
+      { name: 'Arturia KeyLab mk3', meta: 'Universal MIDI Controller' },
+    ]
+  },
+  {
+    id: 'toy', nav: 'Toy', title: 'Toy', cjk: '小 玩 具', accent: 8,
+    items: [
+      { name: 'Teenage Engineering TX-6',  meta: 'Pocket Mixer' },
+      { name: 'Teenage Engineering TP-7',  meta: 'Field Recorder' },
+      { name: 'Teenage Engineering CM-15', meta: 'Portable Condenser Mic' },
+      { name: 'Teenage Engineering OB-4',  meta: 'Magic Radio' },
+    ]
+  },
+];
+</script>
+
+<!-- ════ NAV ════ -->
+<nav class="nav" aria-label="Primary">
+  <a href="#top" class="nav-brand"><strong>陳棉</strong> · 27+ HOME STU</a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links" id="nav-links"></div>
+</nav>
+
+<!-- ════ HERO ════ -->
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <h1 class="hero-title">Gear <em>List</em><span class="dot">.</span></h1>
+    <div class="hero-cjk">器 材 表</div>
+  </div>
+</header>
+
+<!-- ════ MAIN (rendered from SECTIONS) ════ -->
+<main id="main" class="wrap" aria-label="Equipment by category"></main>
+
+<script>
+(function() {
+  const pad2 = n => String(n).padStart(2, '0');
+
+  // Build nav links
+  const navLinks = document.getElementById('nav-links');
+  SECTIONS.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id;
+    a.textContent = s.nav;
+    navLinks.appendChild(a);
+  });
+
+  // Hamburger toggle
+  const toggle = document.querySelector('.nav-toggle');
+  toggle.addEventListener('click', () => {
+    const open = toggle.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+    navLinks.classList.toggle('show');
+  });
+
+  // Build sections
+  const main = document.getElementById('main');
+  SECTIONS.forEach((s, i) => {
+    const total = s.items.length;
+    const section = document.createElement('section');
+    section.className = 'section';
+    section.id = s.id;
+    section.dataset.accent = String(s.accent);
+
+    const head = document.createElement('div');
+    head.className = 'section-head';
+    head.innerHTML =
+      `<span class="section-num">${pad2(i + 1)}</span>` +
+      `<h2 class="section-title">${s.title}</h2>` +
+      `<span class="section-cjk">${s.cjk}</span>`;
+    section.appendChild(head);
+
+    const grid = document.createElement('div');
+    grid.className = 'gear-grid';
+    s.items.forEach((it, j) => {
+      const card = document.createElement('article');
+      card.className = 'gear-card' + (it.onLoan ? ' on-loan' : '');
+      card.innerHTML =
+        `<div class="gear-index">${pad2(j + 1)} / ${pad2(total)}</div>` +
+        `<div class="gear-name">${it.name}</div>` +
+        `<div class="gear-meta">${it.meta}</div>` +
+        (it.onLoan ? `<span class="loan-badge">出借中 · On Loan</span>` : '');
+      grid.appendChild(card);
+    });
+    section.appendChild(grid);
+    main.appendChild(section);
+  });
+})();
+</script>
+
+</body>
+</html>
