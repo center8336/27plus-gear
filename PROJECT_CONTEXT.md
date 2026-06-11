@@ -19,6 +19,17 @@ private notes?"* — that decides where it lands.
 - **Folder:** `~/iCloud Drive/my hip hop/All-About-GEAR/`
 - **Tokens:** `.env` — `GITHUB_PAT`, `NETLIFY_TOKEN`, `NETLIFY_SITE_ID`, `GITHUB_REPO`, `NETLIFY_BUILD_HOOK`
 
+## Source of truth
+
+The **`SECTIONS` array at the top of `equipment.html` is canonical** — it
+defines what gear exists, in what order, what's on loan. Edits happen via
+chat with Claude (or hand-edit), then `deploy.sh`. The git history on GitHub
+is the audit trail.
+
+The Apple Note "器材表" is *not* maintained as a synced source anymore. Keep
+it around as a personal scratchpad (e.g. a "want list" of gear under
+consideration) or retire it — your choice. Do not treat it as authoritative.
+
 ## Skills — task-specific SOPs
 
 When a task matches, **read the skill file before acting**. Each is small and
@@ -31,7 +42,6 @@ focused; loading one doesn't cost you the others.
 | Mark on loan / returned | `skills/mark-on-loan.md` |
 | Add a whole new section | `skills/new-section.md` |
 | Mobile QA after a deploy | `skills/mobile-qa.md` |
-| Sync from Apple Note "器材表" | `skills/sync-from-apple-note.md` |
 
 ## Request format (compact)
 
