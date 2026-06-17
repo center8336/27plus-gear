@@ -63,9 +63,11 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 .verbtns button,.toolbtn{font-family:var(--font-mono);font-size:0.72rem;cursor:pointer;border:1px solid var(--border-light);background:#fff;color:var(--charcoal);padding:7px 13px;border-radius:6px;transition:.15s;text-transform:uppercase;letter-spacing:.06em}
 .verbtns button:hover,.toolbtn:hover{border-color:var(--signal)}
 .verbtns button.active{background:var(--signal);color:#fff;border-color:var(--signal)}
-#stage{position:relative;height:clamp(460px,72vh,840px);border:1px solid var(--border-light);border-radius:var(--radius-lg);overflow:hidden;background:#fbfaf6}
+.viewer{display:flex;gap:1rem;align-items:flex-start}
+.viewer-notes{order:-1;flex:0 0 320px;display:flex;flex-direction:column;gap:10px;max-height:clamp(460px,72vh,840px);overflow:auto}
+#stage{flex:1 1 auto;min-width:0;position:relative;height:clamp(460px,72vh,840px);border:1px solid var(--border-light);border-radius:var(--radius-lg);overflow:hidden;background:#fbfaf6}
 #c{position:absolute;inset:0;width:100%;height:100%;display:block}
-#side{position:absolute;top:12px;left:12px;width:300px;max-width:calc(100% - 24px);background:rgba(255,255,255,.94);border:1px solid var(--border-light);border-radius:10px;padding:13px 14px;box-shadow:0 6px 24px rgba(20,20,22,.08);max-height:calc(100% - 24px);overflow:auto;z-index:4}
+#side{background:rgba(255,255,255,.96);border:1px solid var(--border-light);border-radius:10px;padding:13px 14px}
 #side h2{font-family:var(--font-display);font-size:14px;margin:0 0 2px;font-weight:800}
 #side .tag{font-family:var(--font-mono);font-size:10px;color:var(--signal);font-weight:700;letter-spacing:.4px}
 #side p{font-size:12.5px;line-height:1.5;margin:9px 0;color:#2c303a}
@@ -74,11 +76,12 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 #side .warn:before{content:"!";color:#c0683b}
 #side h3{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--grey);margin:14px 0 4px;font-weight:700}
 .tools{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px;z-index:4;align-items:flex-end}
-#legend{position:absolute;bottom:12px;left:12px;background:rgba(255,255,255,.94);border:1px solid var(--border-light);border-radius:10px;padding:9px 12px;font-family:var(--font-mono);font-size:10.5px;z-index:4;line-height:1.7}
+#legend{background:rgba(255,255,255,.96);border:1px solid var(--border-light);border-radius:10px;padding:9px 12px;font-family:var(--font-mono);font-size:10.5px;line-height:1.7}
 #legend .row{display:flex;align-items:center;gap:7px}
 #legend .sw{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.15)}
 #hint{position:absolute;bottom:12px;right:12px;background:rgba(20,20,22,.78);color:#fff;border-radius:8px;padding:7px 11px;font-family:var(--font-mono);font-size:10.5px;z-index:4;line-height:1.6}
-@media(max-width:720px){#side{width:calc(100% - 24px);max-height:44%} #legend{font-size:9.5px} #hint{display:none}}
+@media(max-width:860px){.viewer{flex-direction:column}.viewer-notes{order:0;flex:auto;width:100%;max-height:none}#stage{width:100%;height:clamp(380px,58vh,560px)}}
+@media(max-width:720px){#legend{font-size:9.5px}#hint{display:none}}
 /* ---- plans + prose ---- */
 .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1rem}
 .plans figure{margin:0;background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-lg);overflow:hidden}
@@ -88,6 +91,10 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 .prose b{color:var(--black)}
 .prose .src{font-size:var(--text-sm);color:var(--grey)}
 .prose .src a{color:var(--signal-dim)}
+.refs{max-width:var(--max-w-text);margin:0;padding-left:1.2rem;font-size:var(--text-sm)}
+.refs li{margin:0 0 .5rem;color:var(--charcoal)}
+.refs a{color:var(--signal-dim);text-decoration:none;border-bottom:1px solid var(--border-light)}
+.refs a:hover{color:var(--signal);border-color:var(--signal)}
 .site-foot{border-top:1px solid var(--border-light);padding:2rem;text-align:center;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--grey)}
 .site-foot a{color:var(--signal)}
 @media (max-width:768px){
@@ -111,6 +118,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
     <a href="#viewer" class="here">3D Room</a>
     <a href="#plans">2D Plans</a>
     <a href="#acoustics">Acoustics</a>
+    <a href="#references">Refs</a>
   </div>
 </nav>
 
@@ -130,16 +138,20 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
       <button data-v="B">Option B</button>
       <button data-v="C">Option C &#9733;</button>
     </div>
-    <div id="stage">
-      <canvas id="c"></canvas>
-      <div id="side"></div>
-      <div class="tools">
-        <button class="toolbtn" id="ceilBtn">Ceiling: off</button>
-        <button class="toolbtn" id="topBtn">Top view</button>
-        <button class="toolbtn" id="resetBtn">Reset view</button>
+    <div class="viewer">
+      <div id="stage">
+        <canvas id="c"></canvas>
+        <div class="tools">
+          <button class="toolbtn" id="ceilBtn">Ceiling: off</button>
+          <button class="toolbtn" id="topBtn">Top view</button>
+          <button class="toolbtn" id="resetBtn">Reset view</button>
+        </div>
+        <div id="hint">drag = orbit · wheel = zoom · right-drag = pan</div>
       </div>
-      <div id="legend"></div>
-      <div id="hint">drag = orbit · wheel = zoom · right-drag = pan</div>
+      <aside class="viewer-notes">
+        <div id="side"></div>
+        <div id="legend"></div>
+      </aside>
     </div>
   </section>
 
@@ -156,7 +168,28 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
     <div class="section-head"><span class="section-num">03</span><h2 class="section-title">Acoustics &amp; Tracking</h2><span class="section-cjk">聲 學 ／ 收 音</span></div>
     <p><b>Mixing.</b> All three fire so the listener sits at the 38% point with a left–right symmetric front. Option&nbsp;C is the textbook build: long-axis firing, dead-centre seat, monitors pulled ~45&nbsp;cm off the front wall, four 45° corner traps, mirror-image first/second-reflection panels, a front-wall pair and a ceiling cloud. The room's one unavoidable compromise is the window on a side wall — treat that mirror point with a real deep absorber, not just a curtain.</p>
     <p><b>Tracking matters as much as mixing here.</b> Each option marks a corner vocal pocket (REC): sing <b>into a corner that carries a panel</b>, with your back or side to the window curtain so the glass can't slap. A ceiling cloud/diffuser goes overhead, a reflection filter + pop filter sit on the NU-100, and the cardioid's rejecting rear faces the open room. The bed doubles as broadband absorption nearby.</p>
-    <p class="src">Pro references: Sound on Sound (Studio SOS / Mike Senior), GIK Acoustics, Arqen, Critical Listening Lab, Acoustics Insider. Reflection-filter use follows Sound on Sound's tests — useful as a supplement, not a cure for the room.</p>
+    <p class="src">Reflection-filter use follows Sound on Sound's tests — a useful supplement, not a cure for the room. Full references below.</p>
+  </section>
+
+  <section class="section prose" id="references">
+    <div class="section-head"><span class="section-num">04</span><h2 class="section-title">References</h2><span class="section-cjk">參 考 資 料</span></div>
+    <ol class="refs">
+      <li><a href="https://www.soundonsound.com/techniques/studio-sos-guide-monitoring-acoustic-treatment" target="_blank" rel="noopener">Sound on Sound — Studio SOS Guide to Monitoring &amp; Acoustic Treatment</a> · Mike Senior</li>
+      <li><a href="https://www.soundonsound.com/sound-advice/q-home-studio-window-mirror-point" target="_blank" rel="noopener">Sound on Sound — Studio window at a mirror point</a></li>
+      <li><a href="https://www.soundonsound.com/sound-advice/q-how-much-difference-does-mic-position-make-vocals" target="_blank" rel="noopener">Sound on Sound — How much difference does mic position make to vocals?</a></li>
+      <li><a href="https://www.soundonsound.com/sound-advice/q-reflection-filter-worth-money" target="_blank" rel="noopener">Sound on Sound — Is a reflection filter worth the money?</a></li>
+      <li><a href="https://www.gikacoustics.com/placing-room-treatments-bass-traps-diffusion-acoustic-panels" target="_blank" rel="noopener">GIK Acoustics — Placing Room Treatments</a></li>
+      <li><a href="https://www.gikacoustics.com/mounting-bass-traps-corners/" target="_blank" rel="noopener">GIK Acoustics — Mounting Bass Traps in Corners</a></li>
+      <li><a href="https://www.gikacoustics.com/how-to-treat-windows-with-acoustic-treatments/" target="_blank" rel="noopener">GIK Acoustics — How to Treat Windows for Sound</a></li>
+      <li><a href="http://arqen.com/acoustics-101/room-setup-acoustic-treatment/" target="_blank" rel="noopener">Arqen — Room Setup &amp; Acoustic Treatment 101</a></li>
+      <li><a href="http://arqen.com/acoustics-101/reflection-free-zone/" target="_blank" rel="noopener">Arqen — How to Build a Reflection-Free Zone</a></li>
+      <li><a href="https://arqen.com/bass-traps-101/placement-guide/" target="_blank" rel="noopener">Arqen — Bass Traps 101: Placement Guide</a></li>
+      <li><a href="https://www.criticallisteninglab.com/en/learn/monitors/38-percent-rule" target="_blank" rel="noopener">Critical Listening Lab — The 38% Rule</a></li>
+      <li><a href="https://www.acousticalsurfaces.com/blog/acoustics-education/first-reflection-points/" target="_blank" rel="noopener">Acoustical Surfaces — First Reflection Points</a></li>
+      <li><a href="https://www.acousticsinsider.com/blog/window-behind-speakers-causing-problems" target="_blank" rel="noopener">Acoustics Insider — Do Windows Hurt Your Studio Acoustics?</a></li>
+      <li><a href="https://www.sonarworks.com/blog/learn/recording-vocals-at-home-microphone-room-tips" target="_blank" rel="noopener">Sonarworks — Recording Vocals at Home</a></li>
+      <li><a href="https://www.izotope.com/en/learn/home-recording-tips-what-room-to-record-in" target="_blank" rel="noopener">iZotope — Which Room Should You Record In?</a></li>
+    </ol>
   </section>
 </main>
 
