@@ -14,7 +14,9 @@ private notes?"* — that decides where it lands.
 
 ## Live deliverable
 
-- **Live:** <https://27plus-gear.netlify.app/equipment.html>
+Two pages, one Netlify site:
+- **Gear list:** <https://27plus-gear.netlify.app/equipment.html>
+- **Control room (3D + 2D):** <https://27plus-gear.netlify.app/room.html>
 - **GitHub:** `center8336/27plus-gear` (main branch)
 - **Folder:** `~/iCloud Drive/my hip hop/All-About-GEAR/`
 - **Tokens:** `.env` — `GITHUB_PAT`, `NETLIFY_TOKEN`, `NETLIFY_SITE_ID`, `GITHUB_REPO`, `NETLIFY_BUILD_HOOK`
@@ -29,6 +31,22 @@ is the audit trail.
 The Apple Note "器材表" is *not* maintained as a synced source anymore. Keep
 it around as a personal scratchpad (e.g. a "want list" of gear under
 consideration) or retire it — your choice. Do not treat it as authoritative.
+
+## Which file to edit (offline → online)
+
+| To change… | Edit (offline source) | Shows up at | Then |
+|---|---|---|---|
+| Gear inventory | `equipment.html` → the `SECTIONS` array | `/equipment.html` | `./deploy.sh` (this file *is* the page) |
+| 3D room scene | `room-acoustic-treatment/studio-room-3d.html` → layouts/geometry builders | `/room.html` | rebuild + deploy ↓ |
+| Room page chrome (nav, hero, copy, refs, CSS) | the `HEAD` template in `room-acoustic-treatment/src/assemble_room.py` | `/room.html` | rebuild + deploy ↓ |
+| 2D top-down plans | `room-acoustic-treatment/src/studio_2d_plans.py` | `/img/studio-2d-option*.png` on `/room.html` | run it, then deploy |
+
+**Generated — never hand-edit (overwritten on rebuild):** `room.html` (built from
+`studio-room-3d.html` + `assemble_room.py`) and `img/studio-2d-option*.png` (built from
+`studio_2d_plans.py`). `equipment.html` is the exception — hand-edited *and* deployed.
+
+**Rebuild the room page:** `python3 room-acoustic-treatment/src/assemble_room.py` (runs from
+any folder, writes `room.html` at the repo root), then `./deploy.sh`.
 
 ## Skills — task-specific SOPs
 
@@ -59,8 +77,8 @@ into the same operations.
 
 ## Mobile QA (mandatory)
 
-Every change to `equipment.html` requires both desktop and mobile viewport
-check before declaring done. Follow `skills/mobile-qa.md`.
+Every change to `equipment.html` **or** `room.html` requires both desktop and mobile
+viewport check before declaring done. Follow `skills/mobile-qa.md`.
 
 ## Deploy workflow
 
@@ -68,8 +86,8 @@ From the project folder:
 ```bash
 ./deploy.sh "commit message"
 ```
-Stages only `equipment.html`, commits, pushes to GitHub `main`, pings the
-Netlify build hook from `.env`. Deploy is live in ~30s.
+Stages `equipment.html`, `room.html`, and `img/` (plus `deploy.sh`), commits, pushes to
+GitHub `main`, pings the Netlify build hook from `.env`. Deploy is live in ~30s.
 
 ## Design system
 
