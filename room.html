@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>控制／錄音室 · 27+ Home Studio · 陳棉</title>
+<title>27+ Home Studio · 貓宅錄音室 · 陳棉</title>
 <meta name="description" content="Interactive 3D layouts + 2D plans for the 27+ control / recording room — acoustics by the book, monitor + mic positions.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
@@ -44,14 +44,19 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 .nav-toggle.open span:nth-child(1){transform:rotate(45deg) translate(4px,5px)}
 .nav-toggle.open span:nth-child(2){opacity:0}
 .nav-toggle.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-5px)}
-.hero{background:var(--black);color:var(--white);padding:7rem 2rem 3rem;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--spectrum-1),var(--spectrum-2),var(--spectrum-3),var(--spectrum-4),var(--spectrum-5),var(--spectrum-6))}
-.hero-inner{max-width:var(--max-w);margin:0 auto;width:100%}
+.hero{background-color:var(--black);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.16'/%3E%3C/svg%3E");color:var(--white);padding:7rem 2rem 3rem;position:relative;overflow:hidden;isolation:isolate}
+/* spectrum bar (kept) */
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;z-index:3;background:linear-gradient(90deg,var(--spectrum-1),var(--spectrum-2),var(--spectrum-3),var(--spectrum-4),var(--spectrum-5),var(--spectrum-6))}
+/* PERIMETRON-inspired light & shadow (from 創業 plan.html) — soft upper-left glow + cinematic vignette, no photo */
+.hero::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 44% 60% at 38% 26%,rgba(203,185,214,0.17) 0%,rgba(203,185,214,0.05) 46%,transparent 72%),radial-gradient(ellipse 85% 78% at 50% 38%,transparent 22%,rgba(9,9,11,0.5) 100%),radial-gradient(ellipse 72% 74% at 50% 46%,transparent 30%,rgba(9,9,11,0.6) 88%,rgba(9,9,11,0.86) 100%),linear-gradient(180deg,rgba(9,9,11,0.45) 0%,transparent 24%,transparent 66%,rgba(9,9,11,0.92) 100%),linear-gradient(90deg,rgba(9,9,11,0.42) 0%,transparent 16%,transparent 84%,rgba(9,9,11,0.42) 100%)}
+.hero-inner{max-width:var(--max-w);margin:0 auto;width:100%;position:relative;z-index:2}
 .hero-title{font-family:var(--font-display);font-size:var(--text-hero);font-weight:800;line-height:0.94;letter-spacing:-0.01em;text-transform:uppercase;margin-bottom:1rem;overflow-wrap:break-word}
 .hero-title em{font-style:normal;color:var(--purple-light)}
 .hero-title .dot{color:var(--purple-deep)}
 .hero-cjk{font-family:var(--font-display);font-size:clamp(1.1rem,3vw,1.8rem);font-weight:700;color:var(--grey-light);letter-spacing:0.3em;margin-bottom:1rem}
 .hero-sub{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--grey-light);letter-spacing:0.04em;max-width:var(--max-w-text)}
+.hero-link{display:inline-flex;align-items:center;gap:0.55rem;margin-top:0.4rem;font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.12em;text-transform:uppercase;color:var(--purple-light);text-decoration:none;border:1px solid rgba(203,185,214,0.38);padding:0.62rem 1.05rem;border-radius:var(--radius);transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease),background var(--dur) var(--ease)}
+.hero-link:hover,.hero-link:focus-visible{border-color:var(--purple-light);background:rgba(203,185,214,0.08);color:var(--white)}
 .wrap{max-width:var(--max-w);margin:0 auto;padding:3.5rem 2rem 4rem}
 .section{margin-bottom:4rem}
 .section-head{display:flex;align-items:baseline;gap:1.25rem;margin-bottom:1.5rem;padding-bottom:0.8rem;border-bottom:1px solid var(--border-light)}
@@ -124,9 +129,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 
 <header class="hero" id="top">
   <div class="hero-inner">
-    <h1 class="hero-title">Control <em>Room</em><span class="dot">.</span></h1>
-    <div class="hero-cjk">控 制 ／ 錄 音 室</div>
-    <p class="hero-sub">3.5 × 2.9 m · ceiling 2.7 m · 12 panels (60×120) · Barefoot Footprint 03 · Nordic Audio Lab NU-100 Gold — three layouts, tuned to pro acoustic practice.</p>
+    <h1 class="hero-title">27+ Home <em>Studio</em><span class="dot">.</span></h1>
+    <div class="hero-cjk">27+ 貓 宅 錄 音 室</div>
+    <a class="hero-link" href="equipment.html">View Gear List →</a>
   </div>
 </header>
 
