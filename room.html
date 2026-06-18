@@ -205,6 +205,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
 </script>
 <script>
 
+
 /* ============================================================
    27+ control/record room — 3D preview
    Room frame: x = 0(west) .. 3.5(east) ; z = 0(south/door) .. 2.9(north/window) ; y = height 0..2.7
@@ -234,7 +235,7 @@ const fill=new THREE.DirectionalLight(0xffffff,0.30); fill.position.set(-3,4,-2)
 
 /* ---------- minimal orbit controls ---------- */
 const target=new THREE.Vector3(RL/2,0.9,RW/2);
-let radius=6.4, theta=-0.7, phi=0.85;
+let radius=6.4, theta=2.44159, phi=0.85;   // default: look from the door (south) so north/window sits at the back, matching the 2D plans
 function applyCam(){
   camera.position.set(
     target.x+radius*Math.sin(phi)*Math.sin(theta),
@@ -249,7 +250,7 @@ canvas.addEventListener('pointerup',()=>drag=null);
 canvas.addEventListener('pointermove',e=>{
   if(drag===null)return;
   const dx=e.clientX-lx, dy=e.clientY-ly; lx=e.clientX; ly=e.clientY;
-  if(drag===0){ theta-=dx*0.006; phi=Math.max(0.12,Math.min(1.52,phi-dy*0.006)); }
+  if(drag===0){ theta+=dx*0.006; phi=Math.max(0.12,Math.min(1.52,phi-dy*0.006)); }   // +dx so horizontal orbit feels natural with the X-mirrored scene
   else { const f=radius*0.0016;
     const right=new THREE.Vector3().subVectors(camera.position,target).cross(new THREE.Vector3(0,1,0)).normalize();
     const up=new THREE.Vector3(0,1,0);
@@ -266,10 +267,10 @@ function box(w,h,d,x,y,z,color,opts={}){
       transparent:opts.opacity!=null,opacity:opts.opacity??1,side:THREE.DoubleSide}));
   m.position.set(x,y,z); if(opts.rotY)m.rotation.y=opts.rotY; root.add(m); return m;
 }
-function edge(w,h,d,x,y,z,color){
+function edge(w,h,d,x,y,z,color,rotY){
   const g=new THREE.EdgesGeometry(new THREE.BoxGeometry(w,h,d));
   const l=new THREE.LineSegments(g,new THREE.LineBasicMaterial({color}));
-  l.position.set(x,y,z); root.add(l); return l;
+  l.position.set(x,y,z); if(rotY)l.rotation.y=rotY; root.add(l); return l;
 }
 function label(text,x,y,z,scale=0.5,fg='#141416',bg='rgba(255,255,255,.82)'){
   const cv=document.createElement('canvas');cv.width=256;cv.height=64;const g=cv.getContext('2d');
@@ -278,7 +279,7 @@ function label(text,x,y,z,scale=0.5,fg='#141416',bg='rgba(255,255,255,.82)'){
   g.fillText(text,128,33);
   const tex=new THREE.CanvasTexture(cv);tex.anisotropy=4;
   const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));
-  sp.position.set(x,y,z);sp.scale.set(scale*2,scale*0.5,1);root.add(sp);return sp;
+  sp.position.set(x,y,z);sp.scale.set(-scale*2,scale*0.5,1);root.add(sp);return sp;  // x negated to cancel the scene's X-mirror (keeps label text readable)
 }
 function roundRect(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
 
@@ -381,18 +382,73 @@ function desk(cx,cz,w,d){ // w along x, d along z
   [[-w/2+0.05,-d/2+0.05],[w/2-0.05,-d/2+0.05],[-w/2+0.05,d/2-0.05],[w/2-0.05,d/2-0.05]]
     .forEach(([ox,oz])=>box(0.05,0.72,0.05,cx+ox,0.36,cz+oz,COL.desk,{rough:.7}));
 }
-function listener(head){
-  // chair
-  box(0.46,0.06,0.46,head.x-0.18,0.48,head.z,COL.chair,{rough:.8});
-  box(0.46,0.5,0.06,head.x-0.41,0.72,head.z,COL.chair,{rough:.8});
-  const post=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.05,0.46,10),
-    new THREE.MeshStandardMaterial({color:COL.offblack,roughness:.7}));
-  post.position.set(head.x-0.18,0.23,head.z);root.add(post);
-  // head
-  const hd=new THREE.Mesh(new THREE.SphereGeometry(0.11,20,16),
-    new THREE.MeshStandardMaterial({color:COL.head,roughness:.7}));
-  hd.position.set(head.x,1.18,head.z);root.add(hd);
-  label('38% seat',head.x,1.5,head.z,0.42,'#c0683b');
+// small gradient env map so the chrome legs read as polished metal (not flat black)
+const CHAIR_ENV=(function(){const cv=document.createElement('canvas');cv.width=16;cv.height=64;const g=cv.getContext('2d');
+  const gr=g.createLinearGradient(0,0,0,64);gr.addColorStop(0,'#ffffff');gr.addColorStop(.55,'#e2e6ea');gr.addColorStop(1,'#9aa0a7');
+  g.fillStyle=gr;g.fillRect(0,0,16,64);const t=new THREE.CanvasTexture(cv);t.mapping=THREE.EquirectangularReflectionMapping;return t;})();
+// chrome tube between two points
+function tubeBetween(p1,p2,r,mat){
+  const v=new THREE.Vector3().subVectors(p2,p1);const len=v.length();
+  const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,len,12),mat);
+  m.position.copy(p1).addScaledVector(v,0.5);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),v.clone().normalize());
+  return m;
+}
+/* Arne Jacobsen Series 7 (3107): one pressure-moulded plywood shell — broad dished
+   seat, pinched "waist", flared butterfly wings — on 4 splayed chrome legs.
+   Built as a parametric (u = seat-front→back-top, v = across) surface. ~46cm seat,
+   ~82cm overall, ~50cm wide, matching Fritz Hansen specs + the reference photos. */
+function series7Shell(mat){
+  const NU=44,NV=24;
+  const K=[[0,0.235],[0.12,0.25],[0.30,0.205],[0.42,0.155],[0.52,0.118],[0.60,0.104],[0.74,0.20],[0.82,0.225],[0.92,0.188],[1.0,0.10]]; // half-width vs u
+  function W(u){for(let i=0;i<K.length-1;i++){const a=K[i],b=K[i+1];if(u<=b[0]){const t=(u-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*t;}}return K[K.length-1][1];}
+  function center(u){ // [z(depth,+=front), y(height)] centreline
+    if(u<0.40){const t=u/0.40;return [0.26-0.42*t, 0.46-0.028*Math.sin(t*Math.PI)-0.012*t];}
+    const t=(u-0.40)/0.60;return [-0.16+0.06*Math.sin(t*Math.PI)-0.085*t, 0.452+0.368*Math.pow(t,0.95)];
+  }
+  const dishY=u=>u<0.42?0.024*(1-u/0.42):0;        // seat dishes down at centre
+  const dishZ=u=>u>0.45?Math.min(1,(u-0.45)/0.18)*0.05:0; // back cups toward sitter
+  const h=0.007;  // half-thickness -> ~14mm moulded-ply shell (solid, not paper-thin)
+  const P=[];
+  for(let i=0;i<=NU;i++){const u=i/NU,c=center(u),w=W(u),dy=dishY(u),dz=dishZ(u),row=[];
+    for(let j=0;j<=NV;j++){const v=-1+2*j/NV,cup=1-v*v;row.push(new THREE.Vector3(v*w,c[1]-dy*cup,c[0]-dz*cup));}P.push(row);}
+  const norm=(i,j)=>{const i0=Math.max(0,i-1),i1=Math.min(NU,i+1),j0=Math.max(0,j-1),j1=Math.min(NV,j+1);
+    return new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(P[i1][j],P[i0][j]),new THREE.Vector3().subVectors(P[i][j1],P[i][j0])).normalize();};
+  const pos=[],idx=[],stride=NV+1,bot=(NU+1)*(NV+1);
+  for(let i=0;i<=NU;i++)for(let j=0;j<=NV;j++){const p=P[i][j],n=norm(i,j);pos.push(p.x+n.x*h,p.y+n.y*h,p.z+n.z*h);}  // top skin
+  for(let i=0;i<=NU;i++)for(let j=0;j<=NV;j++){const p=P[i][j],n=norm(i,j);pos.push(p.x-n.x*h,p.y-n.y*h,p.z-n.z*h);}  // under skin
+  const T=(i,j)=>i*stride+j,Bm=(i,j)=>bot+i*stride+j;
+  for(let i=0;i<NU;i++)for(let j=0;j<NV;j++){
+    idx.push(T(i,j),T(i+1,j),T(i,j+1), T(i,j+1),T(i+1,j),T(i+1,j+1));
+    idx.push(Bm(i,j),Bm(i,j+1),Bm(i+1,j), Bm(i,j+1),Bm(i+1,j+1),Bm(i+1,j));
+  }
+  for(let j=0;j<NV;j++){ idx.push(T(0,j),T(0,j+1),Bm(0,j), Bm(0,j),T(0,j+1),Bm(0,j+1));
+                         idx.push(T(NU,j),Bm(NU,j),T(NU,j+1), T(NU,j+1),Bm(NU,j),Bm(NU,j+1)); }
+  for(let i=0;i<NU;i++){ idx.push(T(i,0),Bm(i,0),T(i+1,0), T(i+1,0),Bm(i,0),Bm(i+1,0));
+                         idx.push(T(i,NV),T(i+1,NV),Bm(i,NV), Bm(i,NV),T(i+1,NV),Bm(i+1,NV)); }
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();
+  return new THREE.Mesh(g,mat);
+}
+function series7Chair(cx,cz,faceAngle){
+  const g=new THREE.Group();
+  const wood=new THREE.MeshStandardMaterial({color:0xBE8E54,roughness:.5,metalness:.05,side:THREE.DoubleSide});
+  const chrome=new THREE.MeshStandardMaterial({color:0xd2d6db,roughness:.18,metalness:1.0,envMap:CHAIR_ENV,envMapIntensity:1.1});
+  const foot=new THREE.MeshStandardMaterial({color:0xb9bec5,roughness:.35,metalness:.7,envMap:CHAIR_ENV});
+  g.add(series7Shell(wood));
+  const hub=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.03,16),chrome);hub.position.set(0,0.40,0.02);g.add(hub);
+  const tops=[[-0.13,0.44,0.10],[0.13,0.44,0.10],[-0.12,0.44,-0.10],[0.12,0.44,-0.10]];
+  const feet=[[-0.215,0.195],[0.215,0.195],[-0.185,-0.175],[0.185,-0.175]];
+  for(let i=0;i<4;i++){
+    g.add(tubeBetween(new THREE.Vector3(...tops[i]),new THREE.Vector3(feet[i][0],0.03,feet[i][1]),0.011,chrome));
+    const ft=new THREE.Mesh(new THREE.CylinderGeometry(0.014,0.014,0.05,10),foot);ft.position.set(feet[i][0],0.025,feet[i][1]);g.add(ft);
+  }
+  g.position.set(cx,0,cz);g.rotation.y=faceAngle;root.add(g);
+}
+function listener(head,face){
+  const a=Math.atan2(face.x,face.z);             // face the monitors
+  series7Chair(head.x-face.x*0.05,head.z-face.z*0.05,a);
+  label('38% seat',head.x,1.06,head.z,0.42,'#c0683b');
 }
 function bed(x0,z0,w,d){
   box(w,0.30,d,x0+w/2,0.27,z0+d/2,COL.bed,{rough:.95});
@@ -440,7 +496,7 @@ function cornerTrap(cx,cz){
   const sx = cx<RL/2 ? 1 : -1, sz = cz<RW/2 ? 1 : -1;
   const x=cx+sx*0.30, z=cz+sz*0.30, ang=Math.atan2(sx,sz);
   box(0.78,1.8,0.14,x,1.0,z,COL.panel,{rough:.95,rotY:ang});
-  edge(0.78,1.8,0.14,x,1.0,z,0x4a4b86);// straddles corner, face into room at 45°
+  edge(0.78,1.8,0.14,x,1.0,z,0x4a4b86,ang);// straddles corner, face into room at 45°
 }
 function firingTriangle(m1,m2,head){
   const mat=new THREE.LineDashedMaterial({color:COL.tri,dashSize:0.08,gapSize:0.06,transparent:true,opacity:.8});
@@ -466,7 +522,7 @@ A:{
     const head={x:2.17,z:RW/2};
     const m1={x:3.15,z:RW/2-0.55}, m2={x:3.15,z:RW/2+0.55};
     monitor(m1.x,m1.z,head); monitor(m2.x,m2.z,head);
-    desk(2.62,RW/2,0.95,0.5); listener(head); firingTriangle(m1,m2,head);
+    desk(2.62,RW/2,0.5,0.95); listener(head,{x:(m1.x+m2.x)/2-head.x,z:(m1.z+m2.z)/2-head.z}); firingTriangle(m1,m2,head);
     bed(0.95,RW-0.85,1.7,0.85);
     // 12 panels:
     cornerTrap(RL,0); cornerTrap(RL,RW);            // 2 front corners (flank monitors)
@@ -485,7 +541,7 @@ B:{
     const head={x:RL/2,z:1.10};
     const m1={x:RL/2-0.55,z:0.32}, m2={x:RL/2+0.55,z:0.32};
     monitor(m1.x,m1.z,head); monitor(m2.x,m2.z,head);
-    desk(RL/2,0.62,1.25,0.5); listener(head); firingTriangle(m1,m2,head);
+    desk(RL/2,0.62,1.25,0.5); listener(head,{x:(m1.x+m2.x)/2-head.x,z:(m1.z+m2.z)/2-head.z}); firingTriangle(m1,m2,head);
     bed(0.85,RW-0.85,1.8,0.85);
     cornerTrap(0,0); cornerTrap(RL,0);              // 2 front corners (door wall)
     cornerTrap(0,RW); cornerTrap(RL,RW);            // 2 rear corners
@@ -503,7 +559,7 @@ C:{
     const head={x:2.17,z:RW/2};
     const m1={x:3.05,z:RW/2-0.52}, m2={x:3.05,z:RW/2+0.52};
     monitor(m1.x,m1.z,head); monitor(m2.x,m2.z,head);
-    desk(2.55,RW/2,0.9,0.45); listener(head); firingTriangle(m1,m2,head);
+    desk(2.55,RW/2,0.45,0.9); listener(head,{x:(m1.x+m2.x)/2-head.x,z:(m1.z+m2.z)/2-head.z}); firingTriangle(m1,m2,head);
     bed(0.9,RW-0.85,1.6,0.85);
     cornerTrap(RL,0); cornerTrap(RL,RW);            // 2 front corners (priority)
     cornerTrap(0,0);  cornerTrap(0,RW);             // 2 rear corners
@@ -580,11 +636,11 @@ document.getElementById('ceilBtn').addEventListener('click',e=>{
 let topView=false;
 document.getElementById('topBtn').addEventListener('click',e=>{
   topView=!topView;
-  if(topView){phi=0.16;theta=0;radius=6.0;e.target.textContent='3D view';}
-  else{phi=0.85;theta=-0.7;radius=6.4;e.target.textContent='Top view';}
+  if(topView){phi=0.16;theta=3.14159;radius=6.0;e.target.textContent='3D view';}   // top-down from the south → north up, east right (matches 2D)
+  else{phi=0.85;theta=2.44159;radius=6.4;e.target.textContent='Top view';}
   target.set(RL/2,0.9,RW/2);applyCam();});
 document.getElementById('resetBtn').addEventListener('click',()=>{
-  phi=0.85;theta=-0.7;radius=6.4;topView=false;
+  phi=0.85;theta=2.44159;radius=6.4;topView=false;
   document.getElementById('topBtn').textContent='Top view';
   target.set(RL/2,0.9,RW/2);applyCam();});
 
@@ -595,9 +651,15 @@ function resize(){const r=stageEl.getBoundingClientRect();
   renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
 window.addEventListener('resize',resize);
 if(window.ResizeObserver){new ResizeObserver(resize).observe(stageEl);}
+/* The 2D plans are north-up / east-right. North is mapped to +z, so a plain
+   y-up camera renders the room left-right mirrored. Mirror the whole scene in X
+   about the room centre so left/right match the 2D. (Labels are sprites — their
+   x-scale is negated in label() so text stays readable.) */
+root.scale.x=-1; root.position.x=RL; shell.scale.x=-1; shell.position.x=RL;
 applyCam();show('A');resize();
 requestAnimationFrame(resize);            // re-measure after first layout pass
 (function loop(){requestAnimationFrame(loop);renderer.render(scene,camera);})();
+
 
 </script>
 </body>
