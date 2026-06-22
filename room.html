@@ -142,6 +142,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
       <button data-v="A" class="active">Option A</button>
       <button data-v="B">Option B</button>
       <button data-v="C">Option C &#9733;</button>
+      <button data-v="V1">Version 1</button>
+      <button data-v="V2">Version 2</button>
     </div>
     <div class="viewer">
       <div id="stage">
@@ -166,6 +168,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
       <figure><img src="img/studio-2d-optionA.png" alt="Option A top-down plan"><figcaption>A — bed under window, fire the long way</figcaption></figure>
       <figure><img src="img/studio-2d-optionB.png" alt="Option B top-down plan"><figcaption>B — monitors on door wall, bed behind</figcaption></figure>
       <figure><img src="img/studio-2d-optionC.png" alt="Option C top-down plan"><figcaption>C ★ — pro reflection-free zone</figcaption></figure>
+      <figure><img src="img/studio-2d-optionV1.png" alt="Version 1 top-down plan"><figcaption>V1 — sofa bed near-door (west), monitors fire west</figcaption></figure>
+      <figure><img src="img/studio-2d-optionV2.png" alt="Version 2 top-down plan"><figcaption>V2 — mirror: sofa bed east, monitors fire east</figcaption></figure>
     </div>
   </section>
 
@@ -576,6 +580,40 @@ C:{
     mic(0.9,0.9,-1,-1);   // SW corner vocal pocket, well behind the mix seat; face the panel'd corner
     enterArrow();
   }
+},
+V1:{
+  title:"Version 1 — sofa bed on the near-door (west) wall, monitors fire west",
+  build(){
+    const head={x:2.17,z:RW/2};
+    const m1={x:3.15,z:RW/2-0.55}, m2={x:3.15,z:RW/2+0.55};
+    monitor(m1.x,m1.z,head); monitor(m2.x,m2.z,head);
+    desk(2.62,RW/2,0.5,0.95); listener(head,{x:(m1.x+m2.x)/2-head.x,z:(m1.z+m2.z)/2-head.z}); firingTriangle(m1,m2,head);
+    bed(0.04,0.60,0.83,1.805);                                              // sofa bed on the near-door west wall (= rear absorber)
+    cornerTrap(RL,0); cornerTrap(RL,RW); cornerTrap(0,0); cornerTrap(0,RW);
+    wallPanel(3.45,1.3,RW/2-0.55,'x'); wallPanel(3.45,1.3,RW/2+0.55,'x');   // front (east) behind monitors
+    wallPanel(2.72,1.3,RW-0.05,'z'); wallPanel(2.72,1.3,0.05,'z');          // 1st reflection N/S
+    wallPanel(1.95,1.3,RW-0.05,'z'); wallPanel(1.95,1.3,0.05,'z');          // 2nd reflection N/S
+    ceilingCloud(2.55,RW/2-0.32); ceilingCloud(2.55,RW/2+0.32);
+    mic(1.05,1.00,-1,-1);  // vocal pocket off the bed foot, face SW corner
+    enterArrow();
+  }
+},
+V2:{
+  title:"Version 2 — mirror: sofa bed on the east wall, monitors fire east",
+  build(){
+    const head={x:RL-2.17,z:RW/2};
+    const m1={x:RL-3.15,z:RW/2-0.55}, m2={x:RL-3.15,z:RW/2+0.55};
+    monitor(m1.x,m1.z,head); monitor(m2.x,m2.z,head);
+    desk(RL-2.62,RW/2,0.5,0.95); listener(head,{x:(m1.x+m2.x)/2-head.x,z:(m1.z+m2.z)/2-head.z}); firingTriangle(m1,m2,head);
+    bed(RL-0.04-0.83,0.60,0.83,1.805);
+    cornerTrap(0,0); cornerTrap(0,RW); cornerTrap(RL,0); cornerTrap(RL,RW);
+    wallPanel(0.05,1.3,RW/2-0.55,'x'); wallPanel(0.05,1.3,RW/2+0.55,'x');   // front (west) behind monitors - OBSTRUCTED wall
+    wallPanel(RL-2.72,1.3,RW-0.05,'z'); wallPanel(RL-2.72,1.3,0.05,'z');    // 1st reflection N/S
+    wallPanel(RL-1.95,1.3,RW-0.05,'z'); wallPanel(RL-1.95,1.3,0.05,'z');    // 2nd reflection N/S
+    ceilingCloud(RL-2.55,RW/2-0.32); ceilingCloud(RL-2.55,RW/2+0.32);
+    mic(RL-1.05,1.00,1,-1);
+    enterArrow();
+  }
 }
 };
 
@@ -613,7 +651,26 @@ C:`<span class="tag">★ RECOMMENDED · textbook build</span>
 <div class="fix">Bed kept compact under the window; dedicated NU-100 vocal spot in the SW corner, away from the mix position.</div>
 <div class="fix warn">For perfect symmetry, add a movable absorber on the left to match the bed's deadening on the right.</div>
 <h3>Tracking / recording</h3>
-<p>Dedicated <b>SW corner pocket</b>, well behind the mix seat so the two jobs don't fight. Face the panel'd corner, back / side to the window curtain, ceiling cloud + diffuser overhead, reflection filter + pop filter on the NU-100. Drape a duvet to deepen the pocket; the cardioid null rejects the room behind you.</p>`
+<p>Dedicated <b>SW corner pocket</b>, well behind the mix seat so the two jobs don't fight. Face the panel'd corner, back / side to the window curtain, ceiling cloud + diffuser overhead, reflection filter + pop filter on the NU-100. Drape a duvet to deepen the pocket; the cardioid null rejects the room behind you.</p>`,
+V1:`<span class="tag">NEW · bed on the near-door wall</span>
+<h2>Version 1 — bed west, monitors fire west</h2>
+<p>Sofa bed moves onto the near-door (west) short wall; the desk + Footprint 03 monitors take the clean east wall and fire down the 3.5 m long axis. Listener at the 38% point, door &amp; column behind you.</p>
+<h3>Why it works</h3>
+<div class="fix">Monitors on the CLEAN short wall — no column or door breaking front symmetry.</div>
+<div class="fix">Long-axis firing: the strongest direction for a small room.</div>
+<div class="fix">The bed doubles as the rear-wall broadband absorber behind the seat.</div>
+<div class="fix warn">Window sits on a side wall — treat that mirror point with a deep absorber, not just a curtain.</div>
+<h3>Tracking / recording</h3>
+<p>Sing into the panel'd SW corner just off the bed foot, back/side to the window curtain; the cardioid rear-null faces the room.</p>`,
+V2:`<span class="tag">NEW · mirror of V1</span>
+<h2>Version 2 — bed east, monitors fire east</h2>
+<p>The same plan flipped: bed on the east wall, desk + monitors on the west wall firing east.</p>
+<h3>Heads-up</h3>
+<div class="fix warn">Monitors now sit on the OBSTRUCTED west wall — the column juts ~0.3 m in, plus the nook and door corner. The front pair can't be fully symmetric, so this reads weaker than V1.</div>
+<div class="fix">Bed on the east wall still gives rear broadband absorption.</div>
+<div class="fix">Long-axis firing is retained.</div>
+<h3>Tracking / recording</h3>
+<p>Vocal pocket in the panel'd SE corner off the bed foot, back/side to the window curtain.</p>`
 };
 
 /* ---------- render a version ---------- */
