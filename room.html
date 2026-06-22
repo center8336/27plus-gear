@@ -142,8 +142,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
       <button data-v="A" class="active">Option A</button>
       <button data-v="B">Option B</button>
       <button data-v="C">Option C &#9733;</button>
-      <button data-v="V1">Version 1</button>
-      <button data-v="V2">Version 2</button>
+      <button data-v="V1">Option D</button>
+      <button data-v="V2">Option E</button>
     </div>
     <div class="viewer">
       <div id="stage">
@@ -168,8 +168,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-off
       <figure><img src="img/studio-2d-optionA.png" alt="Option A top-down plan"><figcaption>A — bed under window, fire the long way</figcaption></figure>
       <figure><img src="img/studio-2d-optionB.png" alt="Option B top-down plan"><figcaption>B — monitors on door wall, bed behind</figcaption></figure>
       <figure><img src="img/studio-2d-optionC.png" alt="Option C top-down plan"><figcaption>C ★ — pro reflection-free zone</figcaption></figure>
-      <figure><img src="img/studio-2d-optionV1.png" alt="Version 1 top-down plan"><figcaption>V1 — sofa bed near-door (west), monitors fire west</figcaption></figure>
-      <figure><img src="img/studio-2d-optionV2.png" alt="Version 2 top-down plan"><figcaption>V2 — mirror: sofa bed east, monitors fire east</figcaption></figure>
+      <figure><img src="img/studio-2d-optionV1.png" alt="Option D top-down plan"><figcaption>D — bed near-door (west), monitors fire west</figcaption></figure>
+      <figure><img src="img/studio-2d-optionV2.png" alt="Option E top-down plan"><figcaption>E — mirror: bed east, monitors fire east</figcaption></figure>
     </div>
   </section>
 
@@ -582,7 +582,7 @@ C:{
   }
 },
 V1:{
-  title:"Version 1 — sofa bed on the near-door (west) wall, monitors fire west",
+  title:"Option D — bed on the near-door (west) wall, monitors fire west",
   build(){
     const head={x:2.17,z:RW/2};
     const m1={x:3.15,z:RW/2-0.55}, m2={x:3.15,z:RW/2+0.55};
@@ -599,7 +599,7 @@ V1:{
   }
 },
 V2:{
-  title:"Version 2 — mirror: sofa bed on the east wall, monitors fire east",
+  title:"Option E — mirror: bed on the east wall, monitors fire east",
   build(){
     const head={x:RL-2.17,z:RW/2};
     const m1={x:RL-3.15,z:RW/2-0.55}, m2={x:RL-3.15,z:RW/2+0.55};
@@ -653,7 +653,7 @@ C:`<span class="tag">★ RECOMMENDED · textbook build</span>
 <h3>Tracking / recording</h3>
 <p>Dedicated <b>SW corner pocket</b>, well behind the mix seat so the two jobs don't fight. Face the panel'd corner, back / side to the window curtain, ceiling cloud + diffuser overhead, reflection filter + pop filter on the NU-100. Drape a duvet to deepen the pocket; the cardioid null rejects the room behind you.</p>`,
 V1:`<span class="tag">NEW · bed on the near-door wall</span>
-<h2>Version 1 — bed west, monitors fire west</h2>
+<h2>Option D — bed west, monitors fire west</h2>
 <p>Sofa bed moves onto the near-door (west) short wall; the desk + Footprint 03 monitors take the clean east wall and fire down the 3.5 m long axis. Listener at the 38% point, door &amp; column behind you.</p>
 <h3>Why it works</h3>
 <div class="fix">Monitors on the CLEAN short wall — no column or door breaking front symmetry.</div>
@@ -662,11 +662,11 @@ V1:`<span class="tag">NEW · bed on the near-door wall</span>
 <div class="fix warn">Window sits on a side wall — treat that mirror point with a deep absorber, not just a curtain.</div>
 <h3>Tracking / recording</h3>
 <p>Sing into the panel'd SW corner just off the bed foot, back/side to the window curtain; the cardioid rear-null faces the room.</p>`,
-V2:`<span class="tag">NEW · mirror of V1</span>
-<h2>Version 2 — bed east, monitors fire east</h2>
+V2:`<span class="tag">NEW · mirror of D</span>
+<h2>Option E — bed east, monitors fire east</h2>
 <p>The same plan flipped: bed on the east wall, desk + monitors on the west wall firing east.</p>
 <h3>Heads-up</h3>
-<div class="fix warn">Monitors now sit on the OBSTRUCTED west wall — the column juts ~0.3 m in, plus the nook and door corner. The front pair can't be fully symmetric, so this reads weaker than V1.</div>
+<div class="fix warn">Monitors now sit on the OBSTRUCTED west wall — the column juts ~0.3 m in, plus the nook and door corner. The front pair can't be fully symmetric, so this reads weaker than D.</div>
 <div class="fix">Bed on the east wall still gives rear broadband absorption.</div>
 <div class="fix">Long-axis firing is retained.</div>
 <h3>Tracking / recording</h3>
